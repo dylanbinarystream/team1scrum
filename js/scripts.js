@@ -96,7 +96,7 @@ $(document).ready(function() {
 
     $("#permanent-options-table tr.data_row").remove();
 
-    for (let i = 0; i < parsedPermOptions.length; i++) {
+    for (let i = 0; i < permanentOptions.length; i++) {
       $('#permanent-options-table').append('<tr class="data_row"><td>' + permanentOptions[i] + '</td><td><button id="toggle_option_' + i
                                           + '" class="toggle_option" type="button">' + (parsedDisabledOptions[i] ? 'Enable' : 'Disable') + '</button></td> </tr>');
     }
