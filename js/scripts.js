@@ -116,7 +116,10 @@ $(document).ready(function() {
     }
   }
 
-});
+
+
+
+
 
 //
 function updateArc() {
@@ -261,5 +264,9 @@ function easeOut(t, b, c, d) {
 }
 
 drawRouletteWheel();
+
 //
 loadTableX();
+loadTableY();
+
+});
