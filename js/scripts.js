@@ -1,23 +1,23 @@
-var permanentOptions = ["Angela", "David", "Devan", "Dylan", "Jacqueline", "Kelly", "Kuljit", "Shengnan", "Vukasin"];
+//Hard-coded permanent team member list. Updated in GitHub repo.
+var permanentMembers = ["Angela", "David", "Devan", "Dylan", "Jacqueline", "Kelly", "Kuljit", "Shengnan", "Vukasin"];
 
-//
-var disabledOptions = new Array(permanentOptions.length);
-var tempOptions = [];
-var activeOptions = [];
+//Cookie array of boolean (false/undefined or true) for each permanent member. Toggles between Here (false; default) or Away (true).
+if (typeof(Cookies.get('disabledMembers'))  === 'undefined'){ //initialize cookie if not already set 
+  Cookies.set('disabledMembers', JSON.stringify(new Array(permanentMembers.length)));
+ }
 
-//
-if (typeof(Cookies.get('disabledOptions'))  === 'undefined'){
-  Cookies.set('disabledOptions', JSON.stringify(disabledOptions));
+//Cookie array of strings similar to permanentMembers, but instead containing temporary members added by the user.
+ if (typeof(Cookies.get('tempMembers'))  === 'undefined'){ //initialize cookie if not already set
+  Cookies.set('tempMembers', JSON.stringify([]));
  }
- if (typeof(Cookies.get('tempOptions'))  === 'undefined'){
-  Cookies.set('tempOptions', JSON.stringify(tempOptions));
- }
- if (typeof(Cookies.get('activeOptions'))  === 'undefined'){
-  Cookies.set('activeOptions', JSON.stringify(activeOptions));
+
+//Cookie array of strings similar to permanentMembers, but also containing temporary members added by the user.
+ if (typeof(Cookies.get('activeMembers'))  === 'undefined'){ //initialize cookie if not already set
+  Cookies.set('activeMembers', JSON.stringify([]));
  }
 
 var startAngle = 0;
-var arc = Math.PI / (permanentOptions.length / 2);
+var arc = Math.PI / (permanentMembers.length / 2);
 var spinTimeout = null;
 
 var spinArcStart = 10;
@@ -28,120 +28,128 @@ var ctx
 
 document.getElementById("spin").addEventListener("click", spin);
 
-//
+//JQuery functions to handle user editing of permanent and temporary team members.
 $(document).ready(function() {
 
-  //
-  $('#permanent-options-table').on('click', '.toggle_option', function() {
-    var parsedDisabledOptions = JSON.parse(Cookies.get('disabledOptions'));
-    let x = this.id.replace(/toggle_option_/, '');
+  //Listener for clicks on the Activate/Deactivate buttons in the Permanent Team Members table.
+  //Updates the disabled boolean for the clicked team member, and reloads the wheel and table.
+  $('#permanent-members-table').on('click', '.toggle_member', function() {
+    var parsedDisabledMembers = JSON.parse(Cookies.get('disabledMembers'));
 
-    if (parsedDisabledOptions[x]) {
-      parsedDisabledOptions[x] = false;
+    //Extract permanent team member's index position from button ID by deleting non-numeric prefix.
+    let memberIndex = this.id.replace(/toggle_member_/, '');
+
+    if (parsedDisabledMembers[memberIndex]) {
+      parsedDisabledMembers[memberIndex] = false;
     } else {
-      parsedDisabledOptions[x] = true;
+      parsedDisabledMembers[memberIndex] = true;
     }
-    Cookies.set('disabledOptions', JSON.stringify(parsedDisabledOptions)); //Copy to cookies
+    Cookies.set('disabledMembers', JSON.stringify(parsedDisabledMembers));
 
     drawRouletteWheel();
-    loadTableX();
+    populatePermanentMembersTable();
   });
 
-  //
-  $('#temp-options-table').on('click', '.remove_temp_btn', function() {
-    var parsedTempOptions = JSON.parse(Cookies.get('tempOptions'));
+  //Listener for clicks on the Remove buttons in the Temporary Team Members table.
+  //Removes the clicked temporary team member, and reloads the wheel and table.
+  $('#temp-members-table').on('click', '.remove_temp_btn', function() {
+    var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
+
+    //Extract temporary team member's index position from button ID by deleting non-numeric prefix.
     let x = this.id.replace(/remove_temp_btn_/, '');
 
-    parsedTempOptions.splice(x,1);
+    //Deletes clicked temporary team member.
+    parsedTempMembers.splice(x,1);
 
-    Cookies.set('tempOptions', JSON.stringify(parsedTempOptions)); //Copy to cookies
+    Cookies.set('tempMembers', JSON.stringify(parsedTempMembers));
 
     drawRouletteWheel();
-    loadTableY();
+    populateTemporaryMembersTable();
   });
 
-  //
-  $('#options-editor').on('click', '#new_temp_btn', function() {
-    var parsedTempOptions = JSON.parse(Cookies.get('tempOptions'));
+  //Listener for clicks on the Add button in the Temporary Team Members table.
+  //Adds the entered name of a temporary team member, and reloads the wheel and table.
+  $('#members-editor-panel').on('click', '#new_temp_btn', function() {
+    var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
 
+    //If a name was entered for a new temporary team member
     if ($('#new_temp_text').val().length > 0) {
-      parsedTempOptions.push($('#new_temp_text').val());
+      parsedTempMembers.push($('#new_temp_text').val());
       $('#new_temp_text').val('');
 
-      Cookies.set('tempOptions', JSON.stringify(parsedTempOptions)); //Copy to cookies
+      Cookies.set('tempMembers', JSON.stringify(parsedTempMembers));
 
       drawRouletteWheel();
-      loadTableY();
+      populateTemporaryMembersTable();
     }
 
   });
 
-  //
-  $('#options-editor').on('click', '#remove_all_temp_btn', function() {
-    var parsedTempOptions = JSON.parse(Cookies.get('tempOptions'));
+  //Listener for clicks on the Clear button in the Temporary Team Members table.
+  //Removes all temporary team members, and reloads the wheel and table.
+  $('#members-editor-panel').on('click', '#remove_all_temp_btn', function() {
+    var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
 
-    if (parsedTempOptions.length > 0) {
-      parsedTempOptions = []
-
-      Cookies.set('tempOptions', JSON.stringify(parsedTempOptions)); //Copy to cookies
+    if (parsedTempMembers.length > 0) {
+      Cookies.set('tempMembers', JSON.stringify([]));
 
       drawRouletteWheel();
-      loadTableY();
+      populateTemporaryMembersTable();
     }
   });
 
-  //
-  function loadTableX() {
-    var parsedDisabledOptions = JSON.parse(Cookies.get('disabledOptions'));
+  //Clear and repopulate the Permanent Members tables from the hard-coded array of permanent members, and the corresponding cookie array of disabled member indices.
+  function populatePermanentMembersTable() {
+    var parsedDisabledMembers = JSON.parse(Cookies.get('disabledMembers'));
 
-    $("#permanent-options-table tr.data_row").remove();
+    $("#permanent-members-table tr.data_row").remove();
 
-    for (let i = 0; i < permanentOptions.length; i++) {
-      $('#permanent-options-table').append('<tr class="data_row"><td>' + permanentOptions[i] + '</td><td><button id="toggle_option_' + i
-                                          + '" class="toggle_option" type="button">' + (parsedDisabledOptions[i] ? 'Away' : 'Here') + '</button></td> </tr>');
+    for (let i = 0; i < permanentMembers.length; i++) {
+      $('#permanent-members-table').append('<tr class="data_row"><td>' + permanentMembers[i] + '</td><td><button id="toggle_member_' + i
+                                          + '" class="toggle_member" type="button">' + (parsedDisabledMembers[i] ? 'Away' : 'Here') + '</button></td> </tr>');
     }
-
   }
 
-  //
-  function loadTableY() {
-    var parsedTempOptions = JSON.parse(Cookies.get('tempOptions'));
+  //Clear and repopulate the Temporary Members tables from the cookie array of temporary members.
+  function populateTemporaryMembersTable() {
+    var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
 
-    $("#temp-options-table tr.data_row").remove();
+    $("#temp-members-table tr.data_row").remove();
 
-    for (let i = 0; i < parsedTempOptions.length; i++) {
-      $('#temp-options-table').append('<tr class="data_row"><td>' + parsedTempOptions[i] + '</td><td><button id="remove_temp_btn_' + i
+    for (let i = 0; i < parsedTempMembers.length; i++) {
+      $('#temp-members-table').append('<tr class="data_row"><td>' + parsedTempMembers[i] + '</td><td><button id="remove_temp_btn_' + i
                                           + '" class="remove_temp_btn" type="button">Remove</button></td> </tr>');
     }
   }
 
-  loadTableX();
-  loadTableY();
+  //On page load populate or refresh (from cookies) the member tables.
+  populatePermanentMembersTable();
+  populateTemporaryMembersTable();
 });
 
 
-//
+//Wheel calculations updated to use full list of active members (non-disabled permanent members and temporary members) from cookie.
 function updateArc() {
-  var parsedActiveOptions = JSON.parse(Cookies.get('activeOptions'));
+  var parsedActiveMembers = JSON.parse(Cookies.get('activeMembers'));
 
-  arc = Math.PI / (parsedActiveOptions.length / 2);
+  arc = Math.PI / (parsedActiveMembers.length / 2);
 }
 
-//
-function refreshActiveOptions() {
-  var parsedDisabledOptions = JSON.parse(Cookies.get('disabledOptions'));
-  var parsedTempOptions = JSON.parse(Cookies.get('tempOptions'));
+//Wheel calculations updated to use full list of active members (non-disabled permanent members and temporary members) from cookie.
+function refreshActiveMembers() {
+  var parsedDisabledMembers = JSON.parse(Cookies.get('disabledMembers'));
+  var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
+  var activeMembers = [];
 
-  activeOptions = []
-  for (let i = 0; i < permanentOptions.length; i++)
+  for (let i = 0; i < permanentMembers.length; i++)
   {
-    if (!parsedDisabledOptions[i]) {
-      activeOptions.push(permanentOptions[i]);
+    if (!parsedDisabledMembers[i]) {
+      activeMembers.push(permanentMembers[i]);
     }
   }
-  activeOptions = activeOptions.concat(parsedTempOptions);
+  activeMembers = activeMembers.concat(parsedTempMembers);
 
-  Cookies.set('activeOptions', JSON.stringify(activeOptions)); //Copy to cookies
+  Cookies.set('activeMembers', JSON.stringify(activeMembers));
   updateArc();
 }
 
@@ -168,9 +176,9 @@ function getColor(item, maxitem) {
 }
 
 function drawRouletteWheel() {
-  //
-  refreshActiveOptions()
-  var parsedActiveOptions = JSON.parse(Cookies.get('activeOptions'));
+  //Wheel calculations updated to use full list of active members (non-disabled permanent members and temporary members) from cookie.
+  refreshActiveMembers()
+  var parsedActiveMembers = JSON.parse(Cookies.get('activeMembers'));
 
   var canvas = document.getElementById("canvas");
   if (canvas.getContext) {
@@ -186,10 +194,10 @@ function drawRouletteWheel() {
 
     ctx.font = 'bold 22px Arial';
 
-    for(var i = 0; i < parsedActiveOptions.length; i++) {
+    for(var i = 0; i < parsedActiveMembers.length; i++) {
       var angle = startAngle + i * arc;
       //ctx.fillStyle = colors[i];
-      ctx.fillStyle = getColor(i, parsedActiveOptions.length);
+      ctx.fillStyle = getColor(i, parsedActiveMembers.length);
       //ctx.fillStyle = 'hsl(' + 360 * Math.random() + ', 50%, 50%)';
       
       ctx.beginPath();
@@ -207,7 +215,7 @@ function drawRouletteWheel() {
       ctx.translate(375 + Math.cos(angle + arc / 2) * textRadius, 
                     375 + Math.sin(angle + arc / 2) * textRadius);
       ctx.rotate(angle + arc / 2 + Math.PI / 2);
-      var text = parsedActiveOptions[i];
+      var text = parsedActiveMembers[i];
       ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
       ctx.restore();
     } 
@@ -247,7 +255,7 @@ function rotateWheel() {
 }
 
 function stopRotateWheel() {
-  var parsedActiveOptions = JSON.parse(Cookies.get('activeOptions'));
+  var parsedActiveMembers = JSON.parse(Cookies.get('activeMembers'));
 
   clearTimeout(spinTimeout);
   var degrees = startAngle * 180 / Math.PI + 90;
@@ -255,7 +263,7 @@ function stopRotateWheel() {
   var index = Math.floor((360 - degrees % 360) / arcd);
   ctx.save();
   ctx.font = 'bold 30px Helvetica, Arial';
-  var text = parsedActiveOptions[index] + ' goes first!';
+  var text = parsedActiveMembers[index] + ' goes first!';
   //ctx.fillText(text, 250 - ctx.measureText(text).width / 2, 250 + 10);
   document.getElementById("result").innerHTML = text;
   ctx.restore();

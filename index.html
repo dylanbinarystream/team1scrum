@@ -44,13 +44,14 @@
         <div id="page-content-wrapper">
             <h1 id="result"><br> </h1>
 
-
-            <button class="float-right" type="button" data-toggle="collapse" data-target="#options-editor" aria-expanded="false" aria-controls="options-editor">
+            <!-- Button for expanding and collapsing the editable tables of active team members. -->
+            <button class="float-right" type="button" data-toggle="collapse" data-target="#members-editor-panel" aria-expanded="false" aria-controls="members-editor-panel">
                 +
             </button>
 
-            <div id="options-editor" class="float-right collapse" >
-                <table id='permanent-options-table'>
+            <!-- Dynamically updated table for permanent team members, and table for temporary team members. -->
+            <div id="members-editor-panel" class="float-right collapse" >
+                <table id='permanent-members-table'>
                     <tbody>
                         <tr>
                             <th>Name</th><th>Available</th>
@@ -63,7 +64,7 @@
                     <input id="new_temp_text" type="text" minlength="1" size="5">
                     <button id="new_temp_btn" type="button">Add Temp</button>
                 </div>
-                <table id='temp-options-table'>
+                <table id='temp-members-table'>
                     <tbody>
                         <tr>
                             <th>Name</th><th><button id="remove_all_temp_btn" type="button">Clear</button></th>
@@ -97,8 +98,8 @@
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- https://github.com/js-cookie/js-cookie Klaus Hartl, Fagner Brack, Awesome Contributors; Pre-release v3.0.0-rc.1 Sep 8 2020 -->
     <script src="vendor/js-cookie/js.cookie.min.js"></script>
-
 
     <!-- My files -->
     <script src="js/scripts.js"></script>
@@ -112,8 +113,6 @@
         $("#wrapper").toggleClass("toggled");
     });
     </script>
-
-
 
 </body>
 
