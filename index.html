@@ -42,11 +42,42 @@
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-                <h1 id="result"><br> </h1>
-                <button type="button" id="spin" class="btn btn-outline-primary">Click to Spin!</button>
-                <!--<input type="button" value="spin" style="float:left;" id="spin" />-->
-                <canvas id="canvas" width="750" height="750"></canvas>
-            <div class="container-fluid">
+            <h1 id="result"><br> </h1>
+
+
+            <button class="float-right" type="button" data-toggle="collapse" data-target="#options-editor" aria-expanded="false" aria-controls="options-editor">
+                +
+            </button>
+
+            <div id="options-editor" class="float-right collapse" >
+                <table id='permanent-options-table'>
+                    <tbody>
+                        <tr>
+                            <th>Name</th><th>Active</th>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <br>
+                <div>
+                    <input id="new_temp_text" type="text" minlength="1" size="5">
+                    <button id="new_temp_btn" type="button">Add Temp</button>
+                </div>
+                <table id='temp-options-table'>
+                    <tbody>
+                        <tr>
+                            <th>Name</th><th><button id="remove_all_temp_btn" type="button">Clear</button></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button id="spin" type="button" class="btn btn-outline-primary">Click to Spin!</button>
+            <!--<input type="button" value="spin" style="float:left;" id="spin" />-->
+
+            <canvas id="canvas" width="750" height="750"></canvas>
+
+            <div id="description" class="container-fluid">
                 <br>
                 <br>
                 <h1>Simple Roulette Wheel</h1>
@@ -56,10 +87,10 @@
                 <br>
                 <a href="#menu-toggle" class="btn btn-outline-dark" id="menu-toggle">Toggle Menu</a>
             </div>
-            
+
         </div>
         <!-- /#page-content-wrapper -->
-
+        
     </div>
     <!-- /#wrapper -->
 
