@@ -136,7 +136,7 @@ function refreshActiveOptions() {
   }
   activeOptions = activeOptions.concat(tempOptions);
 
-  Cookies.set('activeOptions', 'JSON.stringify(activeOptions)'); //Copy to cookies
+  Cookies.set('activeOptions', JSON.stringify(activeOptions)); //Copy to cookies
   alert(Cookies.get('activeOptions'));
   updateArc();
 }
