@@ -75,6 +75,7 @@ $(document).ready(function() {
       drawRouletteWheel();
       loadTableY();
     }
+
   });
 
   //
@@ -116,9 +117,9 @@ $(document).ready(function() {
     }
   }
 
-
-
-
+  loadTableX();
+  loadTableY();
+});
 
 
 //
@@ -264,9 +265,3 @@ function easeOut(t, b, c, d) {
 }
 
 drawRouletteWheel();
-
-//
-loadTableX();
-loadTableY();
-
-});
