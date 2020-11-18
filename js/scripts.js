@@ -95,12 +95,13 @@ $(document).ready(function() {
   //
   function loadTableX() {
     var parsedPermOptions = JSON.parse(Cookies.get('permanentOptions'));
+    var parsedDisabledOptions = JSON.parse(Cookies.get('disabledOptions'));
 
     $("#permanent-options-table tr.data_row").remove();
 
     for (let i = 0; i < parsedPermOptions.length; i++) {
       $('#permanent-options-table').append('<tr class="data_row"><td>' + parsedPermOptions[i] + '</td><td><button id="toggle_option_' + i
-                                          + '" class="toggle_option" type="button">' + (disabledOptions[i] ? 'Enable' : 'Disable') + '</button></td> </tr>');
+                                          + '" class="toggle_option" type="button">' + (parsedDisabledOptions[i] ? 'Enable' : 'Disable') + '</button></td> </tr>');
     }
 
   }
