@@ -1,21 +1,19 @@
 var permanentOptions = ["Angela", "David", "Devan", "Dylan", "Jacqueline", "Kelly", "Kuljit", "Shengnan", "Vukasin"];
+
+//
 var disabledOptions = new Array(permanentOptions.length);
 var tempOptions = [];
 var activeOptions = [];
 
 //
-Cookies.set('permanentOptions', JSON.stringify(permanentOptions));
-
 if (typeof(Cookies.get('disabledOptions'))  === 'undefined'){
-  Cookies.set('disabledOptions', JSON.stringify(disabledOptions)); //Copy to cookies
+  Cookies.set('disabledOptions', JSON.stringify(disabledOptions));
  }
-
  if (typeof(Cookies.get('tempOptions'))  === 'undefined'){
-  Cookies.set('tempOptions', JSON.stringify(tempOptions)); //Copy to cookies
+  Cookies.set('tempOptions', JSON.stringify(tempOptions));
  }
-
  if (typeof(Cookies.get('activeOptions'))  === 'undefined'){
-  Cookies.set('activeOptions', JSON.stringify(activeOptions)); //Copy to cookies
+  Cookies.set('activeOptions', JSON.stringify(activeOptions));
  }
 
 var startAngle = 0;
@@ -94,13 +92,12 @@ $(document).ready(function() {
 
   //
   function loadTableX() {
-    var parsedPermOptions = JSON.parse(Cookies.get('permanentOptions'));
     var parsedDisabledOptions = JSON.parse(Cookies.get('disabledOptions'));
 
     $("#permanent-options-table tr.data_row").remove();
 
     for (let i = 0; i < parsedPermOptions.length; i++) {
-      $('#permanent-options-table').append('<tr class="data_row"><td>' + parsedPermOptions[i] + '</td><td><button id="toggle_option_' + i
+      $('#permanent-options-table').append('<tr class="data_row"><td>' + permanentOptions[i] + '</td><td><button id="toggle_option_' + i
                                           + '" class="toggle_option" type="button">' + (parsedDisabledOptions[i] ? 'Enable' : 'Disable') + '</button></td> </tr>');
     }
 
@@ -132,14 +129,17 @@ function updateArc() {
 
 //
 function refreshActiveOptions() {
+  var parsedDisabledOptions = JSON.parse(Cookies.get('disabledOptions'));
+  var parsedTempOptions = JSON.parse(Cookies.get('tempOptions'));
+
   activeOptions = []
   for (let i = 0; i < permanentOptions.length; i++)
   {
-    if (!disabledOptions[i]) {
+    if (!parsedDisabledOptions[i]) {
       activeOptions.push(permanentOptions[i]);
     }
   }
-  activeOptions = activeOptions.concat(tempOptions);
+  activeOptions = activeOptions.concat(parsedTempOptions);
 
   Cookies.set('activeOptions', JSON.stringify(activeOptions)); //Copy to cookies
   updateArc();
@@ -170,6 +170,7 @@ function getColor(item, maxitem) {
 function drawRouletteWheel() {
   //
   refreshActiveOptions()
+  var parsedActiveOptions = JSON.parse(Cookies.get('activeOptions'));
 
   var canvas = document.getElementById("canvas");
   if (canvas.getContext) {
@@ -185,10 +186,10 @@ function drawRouletteWheel() {
 
     ctx.font = 'bold 22px Arial';
 
-    for(var i = 0; i < activeOptions.length; i++) {
+    for(var i = 0; i < parsedActiveOptions.length; i++) {
       var angle = startAngle + i * arc;
       //ctx.fillStyle = colors[i];
-      ctx.fillStyle = getColor(i, activeOptions.length);
+      ctx.fillStyle = getColor(i, parsedActiveOptions.length);
       //ctx.fillStyle = 'hsl(' + 360 * Math.random() + ', 50%, 50%)';
       
       ctx.beginPath();
@@ -206,7 +207,7 @@ function drawRouletteWheel() {
       ctx.translate(375 + Math.cos(angle + arc / 2) * textRadius, 
                     375 + Math.sin(angle + arc / 2) * textRadius);
       ctx.rotate(angle + arc / 2 + Math.PI / 2);
-      var text = activeOptions[i];
+      var text = parsedActiveOptions[i];
       ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
       ctx.restore();
     } 
@@ -246,13 +247,15 @@ function rotateWheel() {
 }
 
 function stopRotateWheel() {
+  var parsedActiveOptions = JSON.parse(Cookies.get('activeOptions'));
+
   clearTimeout(spinTimeout);
   var degrees = startAngle * 180 / Math.PI + 90;
   var arcd = arc * 180 / Math.PI;
   var index = Math.floor((360 - degrees % 360) / arcd);
   ctx.save();
   ctx.font = 'bold 30px Helvetica, Arial';
-  var text = activeOptions[index] + ' goes first!';
+  var text = parsedActiveOptions[index] + ' goes first!';
   //ctx.fillText(text, 250 - ctx.measureText(text).width / 2, 250 + 10);
   document.getElementById("result").innerHTML = text;
   ctx.restore();
