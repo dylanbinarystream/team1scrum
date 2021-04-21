@@ -88,13 +88,16 @@ $(document).ready(function() {
   //Listener for clicks on the Clear button in the Temporary Team Members table.
   //Removes all temporary team members, and reloads the wheel and table.
   $('#members-editor-panel').on('click', '#remove_all_temp_btn', function() {
-    var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
+      
+    if (window.confirm("Do you want to remove all temporary members?")) {
+        var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
 
-    if (parsedTempMembers.length > 0) {
-      Cookies.set('tempMembers', JSON.stringify([]));
+        if (parsedTempMembers.length > 0) {
+          Cookies.set('tempMembers', JSON.stringify([]));
 
-      drawRouletteWheel();
-      populateTemporaryMembersTable();
+          drawRouletteWheel();
+          populateTemporaryMembersTable();
+        }
     }
   });
 
