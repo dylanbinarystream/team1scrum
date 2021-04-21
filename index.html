@@ -15,6 +15,10 @@
 
     <!-- Custom styles for this template -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    
     <!-- Favicon -->
     <link rel="shortcut icon" href="assets\images\favicon\crypto.ico">
 </head>
@@ -45,7 +49,7 @@
             <h1 id="result"><br> </h1>
 
             <!-- Button for expanding and collapsing the editable tables of active team members. -->
-            <button class="float-right" type="button" data-toggle="collapse" data-target="#members-editor-panel" aria-expanded="false" aria-controls="members-editor-panel">
+            <button id="members-editor-toggle-button"  class="float-right" type="button" data-toggle="collapse" data-target="#members-editor-panel" aria-expanded="false" aria-controls="members-editor-panel">
                 +
             </button>
 
@@ -112,6 +116,16 @@
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
+    </script>
+    
+    <!-- Members Editor Panel Toggle Button Script -->
+    <script>
+    $('#members-editor-panel').on('show.bs.collapse', function () {
+        document.getElementById('members-editor-toggle-button').innerText = '-';
+    })
+    $('#members-editor-panel').on('hide.bs.collapse', function () {
+        document.getElementById('members-editor-toggle-button').innerText = '+';
+    })
     </script>
 
 </body>
