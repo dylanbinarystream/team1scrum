@@ -1,5 +1,15 @@
 //Hard-coded permanent team member list. Updated in GitHub repo.
-var permanentMembers = ["Angela", "David", "Devan", "Dylan", "Jacqueline", "Kelly", "Kuljit", "Shengnan", "Vukasin"];
+var permanentMembers = [
+                        "David",
+                        "Devan",
+                        "Dylan",
+                        "Jacqueline",
+                        "Judith",
+                        "Kelly",
+                        "Kuljit",
+                        "Shengnan",
+                        "Vukasin"
+                        ];
 
 //Cookie array of boolean (false/undefined or true) for each permanent member. Toggles between Here (false; default) or Away (true).
 if (typeof(Cookies.get('disabledMembers'))  === 'undefined'){ //initialize cookie if not already set 
