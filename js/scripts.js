@@ -119,7 +119,7 @@ $(document).ready(function() {
 
     for (let i = 0; i < permanentMembers.length; i++) {
       $('#permanent-members-table').append('<tr class="data_row"><td>' + permanentMembers[i] + '</td><td><button id="toggle_member_' + i
-                                          + '" class="toggle_member" type="button">' + (parsedDisabledMembers[i] ? 'Away' : 'Here') + '</button></td> </tr>');
+                                          + '" class="toggle_member btn-outline-primary" type="button">' + (parsedDisabledMembers[i] ? 'Away' : 'Here') + '</button></td> </tr>');
     }
   }
 
@@ -131,7 +131,7 @@ $(document).ready(function() {
 
     for (let i = 0; i < parsedTempMembers.length; i++) {
       $('#temp-members-table').append('<tr class="data_row"><td>' + parsedTempMembers[i] + '</td><td><button id="remove_temp_btn_' + i
-                                          + '" class="remove_temp_btn" type="button">Remove</button></td> </tr>');
+                                          + '" class="remove_temp_btn btn-outline-primary" type="button">Remove</button></td> </tr>');
     }
   }
 
