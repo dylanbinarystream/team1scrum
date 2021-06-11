@@ -99,14 +99,14 @@ $(document).ready(function() {
   //Removes all temporary team members, and reloads the wheel and table.
   $('#members-editor-panel').on('click', '#remove_all_temp_btn', function() {
       
-    if (window.confirm("Do you want to remove all temporary members?")) {
-        var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
-
-        if (parsedTempMembers.length > 0) {
+    var parsedTempMembers = JSON.parse(Cookies.get('tempMembers'));
+    if (parsedTempMembers.length > 0) {
+        
+        if (window.confirm("Do you want to remove all temporary members?")) {
           Cookies.set('tempMembers', JSON.stringify([]));
 
           drawRouletteWheel();
-          populateTemporaryMembersTable();
+          populateTemporaryMembersTable();   
         }
     }
   });
