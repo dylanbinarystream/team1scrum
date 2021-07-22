@@ -5,3 +5,7 @@
 .toggle_member{
     width:55px;
 }
+
+.present_member_name{
+    font-weight: bold;
+}

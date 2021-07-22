@@ -118,8 +118,9 @@ $(document).ready(function() {
     $("#permanent-members-table tr.data_row").remove();
 
     for (let i = 0; i < permanentMembers.length; i++) {
-      $('#permanent-members-table').append('<tr class="data_row"><td>' + permanentMembers[i] + '</td><td><button id="toggle_member_' + i
-                                          + '" class="toggle_member btn-outline-primary" type="button">' + (parsedDisabledMembers[i] ? 'Away' : 'Here') + '</button></td> </tr>');
+      $('#permanent-members-table').append('<tr class="data_row"><td class="' + (parsedDisabledMembers[i] ? '' : '.present_member_name')
+                                            + '">' + permanentMembers[i] + '</td><td><button id="toggle_member_' + i
+                                            + '" class="toggle_member btn-outline-primary" type="button">' + (parsedDisabledMembers[i] ? 'Away' : 'Here') + '</button></td> </tr>');
     }
   }
 
@@ -130,8 +131,9 @@ $(document).ready(function() {
     $("#temp-members-table tr.data_row").remove();
 
     for (let i = 0; i < parsedTempMembers.length; i++) {
-      $('#temp-members-table').append('<tr class="data_row"><td>' + parsedTempMembers[i] + '</td><td><button id="remove_temp_btn_' + i
-                                          + '" class="remove_temp_btn btn-outline-primary" type="button">Remove</button></td> </tr>');
+      $('#temp-members-table').append('<tr class="data_row"><td class=".present_member_name">'
+                                            + parsedTempMembers[i] + '</td><td><button id="remove_temp_btn_' + i
+                                            + '" class="remove_temp_btn btn-outline-primary" type="button">Remove</button></td> </tr>');
     }
   }
 
