@@ -37,6 +37,7 @@ var spinTimeTotal = 1;
 var ctx
 
 document.getElementById("spin").addEventListener("click", spin);
+document.getElementById("spin2").addEventListener("click", spin);
 
 //JQuery functions to handle user editing of permanent and temporary team members.
 $(document).ready(function() {

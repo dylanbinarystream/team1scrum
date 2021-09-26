@@ -9,3 +9,14 @@
 .present_member_name{
     font-weight: bold;
 }
+
+#spin2{
+    height: 372px;
+    width: 372px;
+    border-radius: 50%;
+    border: 120px solid gold;
+    z-index: 1;
+    position: absolute;
+    left: 332px;
+    top: 264.5px; 
+}
