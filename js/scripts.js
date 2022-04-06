@@ -6,6 +6,7 @@ var permanentMembers = [
                         "Judith",
                         "Kelly",
                         "Kuljit",
+                        "Peter",
                         "Shengnan",
                         "Vukasin"
                         ];
@@ -177,11 +178,11 @@ function RGB2Color(r,g,b) {
   return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
 }
 
-function getColor(item, maxitem) {
+function getColor(item, maxItem) {
   var phase = 0;
   var center = 128;
   var width = 127;
-  var frequency = Math.PI*2/maxitem;
+  var frequency = Math.PI*2/maxItem;
   
   red   = Math.sin(frequency*item+2+phase) * width + center;
   green = Math.sin(frequency*item+0+phase) * width + center;
@@ -274,8 +275,8 @@ function stopRotateWheel() {
 
   clearTimeout(spinTimeout);
   var degrees = startAngle * 180 / Math.PI + 90;
-  var arcd = arc * 180 / Math.PI;
-  var index = Math.floor((360 - degrees % 360) / arcd);
+  var arcD = arc * 180 / Math.PI;
+  var index = Math.floor((360 - degrees % 360) / arcD);
   ctx.save();
   ctx.font = 'bold 30px Helvetica, Arial';
   var text = parsedActiveMembers[index] + ' goes first!';
