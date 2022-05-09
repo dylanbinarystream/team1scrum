@@ -19,5 +19,6 @@
     z-index: 1;
     position: absolute;
     left: 332px;
-    top: 264.5px; 
+    top: 264.5px;
+    font-weight: bold;
 }
