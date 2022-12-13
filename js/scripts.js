@@ -8,8 +8,8 @@ var permanentMembers = [
   "Kelly",
   "Kuljit",
   "Manpreet",
-  "Royali",
   "Rebecca",
+  "Royali",
   //"Shengnan",
   "Vukasin"
 ];
