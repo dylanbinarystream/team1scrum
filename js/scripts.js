@@ -28,7 +28,7 @@ if (typeof (Cookies.get('activeMembers')) === 'undefined') { //initialize cookie
   Cookies.set('activeMembers', JSON.stringify([]));
 }
 
-var startAngle = 0;
+var startAngle = Match.random() * 360;
 var arc = Math.PI / (permanentMembers.length / 2);
 var spinTimeout = null;
 
