@@ -1,16 +1,17 @@
 //Hard-coded permanent team member list. Updated in GitHub repo.
 var permanentMembers = [
   "Arvind",
-  "David",
+  "Bob",
   "Dylan",
   "Jacqueline",
   "Judith",
   "Kelly",
+  "Kenny",
   "Kuljit",
-  "Manpreet",
   "Rebecca",
   "Royali",
-  //"Shengnan"
+  "Shengnan"
+  "Thomas"
 ];
 
 //Cookie array of boolean (false/undefined or true) for each permanent member. Toggles between Here (false; default) or Away (true).
