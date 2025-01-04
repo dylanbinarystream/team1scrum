@@ -8,10 +8,10 @@ var permanentMembers = [
   "Kelly",
   "Kenny",
   "Kuljit",
+  "Leon",
+  "Natalie",
   "Rebecca",
-  "Royali",
   "Shengnan",
-  "Thomas",
 ];
 
 //Cookie array of boolean (false/undefined or true) for each permanent member. Toggles between Here (false; default) or Away (true).
