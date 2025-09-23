@@ -5,11 +5,11 @@ var permanentMembers = [
   "Dylan",
   "Jacqueline",
   "Judith",
+  "Judy",
   "Kelly",
   "Kenny",
   "Kuljit",
   "Leon",
-  "Natalie",
   "Rebecca",
   "Shengnan",
 ];
