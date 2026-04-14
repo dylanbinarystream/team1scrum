@@ -1,7 +1,6 @@
 //Hard-coded permanent team member list. Updated in GitHub repo.
 var permanentMembers = [
   "Arvind",
-  "Bob",
   "Dylan",
   "Jacqueline",
   "Judith",
@@ -10,6 +9,7 @@ var permanentMembers = [
   "Kenny",
   "Kuljit",
   "Leon",
+  "Mary",
   "Natalie",
   "Rebecca",
   "Shengnan",
