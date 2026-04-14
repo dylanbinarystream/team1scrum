@@ -174,8 +174,9 @@ body {
   font-size: 1rem;
   z-index: 1;
   position: absolute;
-  left: 332px;
-  top: 264.5px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   cursor: pointer;
   transition: background-color 0.15s, border-color 0.15s;
 }
