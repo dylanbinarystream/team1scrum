@@ -34,9 +34,10 @@ var startAngle = Math.random() * 360;
 var arc = Math.PI / (permanentMembers.length / 2);
 var spinTimeout = null;
 
-var spinArcStart = 10;
-var spinTime = 1;
-var spinTimeTotal = 1;
+var spinAngleStart = 10;
+var spinTime = 0;
+var spinTimeTotal = 0;
+var spinFriction = 0.99;
 
 var ctx
 
@@ -125,7 +126,7 @@ $(document).ready(function () {
     for (let i = 0; i < permanentMembers.length; i++) {
       $('#permanent-members-table').append('<tr class="data_row"><td class="' + (parsedDisabledMembers[i] ? '' : 'present_member_name')
         + '">' + permanentMembers[i] + '</td><td><button id="toggle_member_' + i
-        + '" class="toggle_member btn-outline-primary" type="button">' + (parsedDisabledMembers[i] ? 'Away' : 'Here') + '</button></td> </tr>');
+        + '" class="toggle_member" type="button">' + (parsedDisabledMembers[i] ? 'Away' : 'Here') + '</button></td> </tr>');
     }
   }
 
@@ -138,7 +139,7 @@ $(document).ready(function () {
     for (let i = 0; i < parsedTempMembers.length; i++) {
       $('#temp-members-table').append('<tr class="data_row"><td class="present_member_name">'
         + parsedTempMembers[i] + '</td><td><button id="remove_temp_btn_' + i
-        + '" class="remove_temp_btn btn-outline-primary" type="button">Remove</button></td> </tr>');
+        + '" class="remove_temp_btn" type="button">Remove</button></td> </tr>');
     }
   }
 
@@ -172,26 +173,18 @@ function refreshActiveMembers() {
   updateArc();
 }
 
-function byte2Hex(n) {
-  var nybHexString = "0123456789ABCDEF";
-  return String(nybHexString.substr((n >> 4) & 0x0F, 1)) + nybHexString.substr(n & 0x0F, 1);
-}
+// Binary Stream brand palette — cycling segment colours
+var segmentColors = [
+  '#00214F', // Navy
+  '#004778', // Stream
+  '#381D96', // Indigo
+  '#00626B', // Pine
+  '#009AA6', // Teal
+  '#6D8BED', // Azure
+];
 
-function RGB2Color(r, g, b) {
-  return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
-}
-
-function getColor(item, maxItem) {
-  var phase = 0;
-  var center = 128;
-  var width = 127;
-  var frequency = Math.PI * 2 / maxItem;
-
-  red = Math.sin(frequency * item + 2 + phase) * width + center;
-  green = Math.sin(frequency * item + 0 + phase) * width + center;
-  blue = Math.sin(frequency * item + 4 + phase) * width + center;
-
-  return RGB2Color(red, green, blue);
+function getColor(item) {
+  return segmentColors[item % segmentColors.length];
 }
 
 function drawRouletteWheel() {
@@ -208,16 +201,14 @@ function drawRouletteWheel() {
     ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, 750, 750);
 
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "#6D8BED"; // Azure border
     ctx.lineWidth = 2;
 
-    ctx.font = 'bold 22px Arial';
+    ctx.font = 'bold 22px Manrope, Arial';
 
     for (var i = 0; i < parsedActiveMembers.length; i++) {
       var angle = startAngle + i * arc;
-      //ctx.fillStyle = colors[i];
-      ctx.fillStyle = getColor(i, parsedActiveMembers.length);
-      //ctx.fillStyle = 'hsl(' + 360 * Math.random() + ', 50%, 50%)';
+      ctx.fillStyle = getColor(i);
 
       ctx.beginPath();
       ctx.arc(375, 375, outsideRadius, angle, angle + arc, false);
@@ -228,9 +219,9 @@ function drawRouletteWheel() {
       ctx.save();
       ctx.shadowOffsetX = -1;
       ctx.shadowOffsetY = -1;
-      ctx.shadowBlur = 0;
-      ctx.shadowColor = "rgb(220,220,220)";
-      ctx.fillStyle = "black";
+      ctx.shadowBlur = 2;
+      ctx.shadowColor = "rgba(0,0,0,0.5)";
+      ctx.fillStyle = "#FFFFFF"; // White label text
       ctx.translate(375 + Math.cos(angle + arc / 2) * textRadius,
         375 + Math.sin(angle + arc / 2) * textRadius);
       ctx.rotate(angle + arc / 2 + Math.PI / 2);
@@ -240,7 +231,7 @@ function drawRouletteWheel() {
     }
 
     //Arrow
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#6D8BED"; // Azure arrow
     ctx.beginPath();
     ctx.moveTo(375 - 6, 375 - (outsideRadius + 7.5));
     ctx.lineTo(375 + 6, 375 - (outsideRadius + 7.5));
@@ -254,10 +245,30 @@ function drawRouletteWheel() {
   }
 }
 
+// Tracks the index of the last selected segment to avoid repeated picks
+var lastWinnerIndex = -1;
+
 function spin() {
-  spinAngleStart = Math.random() * 10 + 10;
+  var parsedActiveMembers = JSON.parse(Cookies.get('activeMembers'));
+  if (parsedActiveMembers.length === 0) {
+    document.getElementById("result").innerHTML = "Add team members to spin!";
+    return;
+  }
+
+  // Randomise all spin parameters fresh on each click
+  spinAngleStart = 8 + Math.random() * 10;           // random initial velocity
   spinTime = 0;
-  spinTimeTotal = Math.random() * 3 + 4 * 1000;
+  spinTimeTotal = 4000 + Math.random() * 5000;       // random duration 4–9 s
+  spinFriction = 0.985 + Math.random() * 0.01;       // random deceleration
+
+  // Bias prevention: rotate the starting angle by a random non-zero number of
+  // full segment widths so the wheel never rests on the same person twice in a row.
+  if (lastWinnerIndex >= 0 && parsedActiveMembers.length > 1) {
+    var segmentCount = parsedActiveMembers.length;
+    var offset = (1 + Math.floor(Math.random() * (segmentCount - 1))) * arc;
+    startAngle += offset;
+  }
+
   rotateWheel();
 }
 
@@ -267,8 +278,9 @@ function rotateWheel() {
     stopRotateWheel();
     return;
   }
-  var spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
-  startAngle += (spinAngle * Math.PI / 180);
+  // Apply friction-based deceleration: scale remaining velocity by friction each frame
+  spinAngleStart *= spinFriction;
+  startAngle += (spinAngleStart * Math.PI / 180);
   drawRouletteWheel();
   spinTimeout = setTimeout('rotateWheel()', 30);
 }
@@ -279,19 +291,10 @@ function stopRotateWheel() {
   clearTimeout(spinTimeout);
   var degrees = startAngle * 180 / Math.PI + 90;
   var arcD = arc * 180 / Math.PI;
-  var index = Math.floor((360 - degrees % 360) / arcD);
-  ctx.save();
-  ctx.font = 'bold 30px Helvetica, Arial';
+  var index = Math.floor((360 - degrees % 360) / arcD) % parsedActiveMembers.length;
   var text = parsedActiveMembers[index] + ' goes first!';
-  //ctx.fillText(text, 250 - ctx.measureText(text).width / 2, 250 + 10);
   document.getElementById("result").innerHTML = text;
-  ctx.restore();
-}
-
-function easeOut(t, b, c, d) {
-  var ts = (t /= d) * t;
-  var tc = ts * t;
-  return b + c * (tc + -3 * ts + 3 * t);
+  lastWinnerIndex = index;
 }
 
 drawRouletteWheel();
