@@ -9,6 +9,7 @@ var permanentMembers = [
   "Kenny",
   "Kuljit",
   "Leon",
+  "Mary",
   "Natalie",
   "Rebecca",
   "Shengnan",
