@@ -1,24 +1,217 @@
-#members-editor-toggle-button{
-    width:30px;
+/* =====================================================
+   Binary Stream — Brand CSS
+   ===================================================== */
+
+/* --- Colour tokens --- */
+:root {
+  --bs-navy:   #00214F;
+  --bs-stream: #004778;
+  --bs-indigo: #381D96;
+  --bs-azure:  #6D8BED;
+  --bs-rain:   #EAECFA;
+  --bs-pine:   #00626B;
+  --bs-teal:   #009AA6;
+  --bs-white:  #FFFFFF;
 }
 
-.toggle_member{
-    width:55px;
+/* --- Global typography --- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: 'Manrope', Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  background: linear-gradient(to right, var(--bs-indigo), var(--bs-navy));
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--bs-white);
 }
 
-.present_member_name{
-    font-weight: bold;
+/* --- Site header / wordmark --- */
+#site-header {
+  padding: 20px 0 8px 0;
 }
 
-#spin2{
-    height: 372px;
-    width: 372px;
-    border-radius: 50%;
-    border: 120px solid gold;
-    background-color:crimson;
-    z-index: 1;
-    position: absolute;
-    left: 332px;
-    top: 264.5px;
-    font-weight: bold;
+#site-logo {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.logo-binary {
+  color: var(--bs-white);
+}
+
+.logo-stream {
+  color: var(--bs-azure);
+}
+
+#site-subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--bs-azure);
+  margin: 2px 0 0 0;
+}
+
+/* --- Result display --- */
+#result {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--bs-rain);
+  min-height: 2.4rem;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* --- Members panel card --- */
+#members-panel-card {
+  background: var(--bs-white);
+  border: 2px solid var(--bs-azure);
+  border-radius: 20px;
+  padding: 16px 20px;
+  color: var(--bs-navy);
+  margin-bottom: 12px;
+}
+
+#members-panel-card th {
+  font-weight: 600;
+  color: var(--bs-navy);
+  padding: 4px 8px;
+}
+
+#members-panel-card td {
+  padding: 4px 8px;
+  font-weight: 400;
+}
+
+.present_member_name {
+  font-weight: 700;
+  color: var(--bs-navy);
+}
+
+/* --- Toggle button (expand/collapse panel) --- */
+#members-editor-toggle-button {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--bs-stream);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bs-azure);
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+#members-editor-toggle-button:hover {
+  background: var(--bs-stream);
+  color: var(--bs-white);
+}
+
+/* --- Text input in panel --- */
+#new_temp_text {
+  border: 2px solid var(--bs-stream);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--bs-navy);
+  background: var(--bs-rain);
+}
+
+/* --- Secondary buttons (Add Temp, Clear, Remove, Toggle Menu) --- */
+.btn-secondary-bs {
+  display: inline-block;
+  border: 2px solid var(--bs-stream);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bs-stream);
+  font-family: 'Manrope', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-secondary-bs:hover {
+  background: var(--bs-stream);
+  color: var(--bs-white);
+}
+
+/* --- Primary Spin button (below-wheel) --- */
+#spin {
+  display: block;
+  background: var(--bs-pine);
+  color: var(--bs-white);
+  font-family: 'Manrope', Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 28px;
+  margin: 12px 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#spin:hover {
+  background: #00484f;
+}
+
+/* --- Centre overlay Spin button (on the wheel) --- */
+#spin2 {
+  height: 372px;
+  width: 372px;
+  border-radius: 50%;
+  border: 120px solid var(--bs-pine);
+  background-color: var(--bs-indigo);
+  color: var(--bs-white);
+  font-family: 'Manrope', Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  z-index: 1;
+  position: absolute;
+  left: 332px;
+  top: 264.5px;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+#spin2:hover {
+  background-color: var(--bs-stream);
+  border-color: var(--bs-teal);
+}
+
+/* --- Canvas wrapper --- */
+#canvas {
+  display: block;
+}
+
+/* --- Description section --- */
+#description {
+  padding: 12px 0;
+}
+
+/* --- Member table secondary buttons (Remove) --- */
+.toggle_member,
+.remove_temp_btn {
+  border: 2px solid var(--bs-stream);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bs-stream);
+  font-family: 'Manrope', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.toggle_member:hover,
+.remove_temp_btn:hover {
+  background: var(--bs-stream);
+  color: var(--bs-white);
 }
